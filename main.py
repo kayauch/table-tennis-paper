@@ -20,4 +20,4 @@ for result in search.results():
 with open("README.md", "w", encoding="utf-8") as f:
     f.write("# Table Tennis Paper Aggregator\n\n")
     f.write("筑波大学工学システム学類のプロジェクトとして、最新の卓球論文を自動収集しています。\n\n")
-    f.write(results_t
+    f.write(results_text)
