@@ -2,7 +2,6 @@ import arxiv
 import datetime
 import time  # 1. 時間制御用のライブラリを追加
 from deep_translator import GoogleTranslator
-from plyer import notification
 
 translator = GoogleTranslator(source='en', target='ja')
 
@@ -55,10 +54,3 @@ with open("README.md", "w", encoding="utf-8") as f:
     f.write("---\n\n")
     f.write("## 🏓 最新の卓球論文全般\n\n")
     f.write(general_list)
-
-notification.notify(
-    title='最新の卓球論文',
-    message='画像処理に関する新しい論文が3件見つかりました。',
-    app_name='Table Tennis Bot',
-    timeout=10 # 10秒間表示
-)
