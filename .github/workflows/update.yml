@@ -3,13 +3,13 @@ name: Update Paper List
 on:
   schedule:
     - cron: '0 0 * * *' # 毎日日本時間の朝9時（UTC 0時）に実行
-  workflow_dispatch:      # 手動で実行するボタンも作る
+  workflow_dispatch:      # 手動で実行するボタン
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # コードを読み込む
+      - uses: actions/checkout@v4 
       
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -19,10 +19,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
         
-      - name: Run script
+      - name: Run script and Send LINE
+        env:
+          # ここでプログラムに「金庫の中身」を渡します
+          LINE_ACCESS_TOKEN: ${{ secrets.LINE_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
         run: python main.py
         
-      - name: Commit and Push
+      - name: Commit and Push (README update)
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
