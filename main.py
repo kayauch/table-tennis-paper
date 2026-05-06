@@ -2,6 +2,7 @@ import arxiv
 import datetime
 import time  # 1. 時間制御用のライブラリを追加
 from deep_translator import GoogleTranslator
+from line_notifier import send_line 
 
 translator = GoogleTranslator(source='en', target='ja')
 
@@ -31,26 +32,21 @@ def get_translated_papers(query, max_results):
         text += f"  - 要約: {summary_ja}...\n\n"
     return text
 
-# --- 実行部分 ---
 
-# 1. 汎用的な最新論文
-general_query = 'all:"table tennis" OR all:"ping pong"'
-general_list = get_translated_papers(general_query, 5)
 
-# 2. 次の検索の前に「5秒」休憩を入れる（これが重要！）
-print("Waiting for next request...")
-time.sleep(5)
+# ...（既存の get_translated_papers 関数などはそのまま）...
 
-# 3. 画像処理に特化した論文
-cv_query = '(all:"table tennis" OR all:"ping pong") AND (all:"image processing" OR all:"computer vision" OR all:"deep learning")'
-cv_list = get_translated_papers(cv_query, 5)
+# --- 実行部分の最後に追加 ---
 
-# --- 以下、README書き出し処理 ---
-with open("README.md", "w", encoding="utf-8") as f:
-    f.write("# Table Tennis Paper Aggregator\n\n")
-    f.write(f"最終更新日: {datetime.date.today()}\n\n")
-    f.write("## 📷 画像処理・AI活用 厳選5選\n\n")
-    f.write(cv_list)
-    f.write("---\n\n")
-    f.write("## 🏓 最新の卓球論文全般\n\n")
-    f.write(general_list)
+# 4. LINE送信用のメッセージを組み立て
+line_message = f"🏓 卓球論文アップデート ({datetime.date.today()})\n\n"
+line_message += "【注目のAI論文】\n"
+# リストからタイトルだけを抽出して短くまとめる工夫をすると読みやすいです
+line_message += cv_list.split('\n')[0] # 最初の1件だけ抜粋など
+
+# 5. LINEに送信
+status = send_line(line_message)
+if status == 200:
+    print("LINE notification sent successfully!")
+else:
+    print(f"Failed to send LINE: {status}")
