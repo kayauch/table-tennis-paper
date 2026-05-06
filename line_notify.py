@@ -2,11 +2,12 @@ import requests
 import os
 
 def send_line(message):
-    # 環境変数からトークンとIDを取得（後述の.envで設定します）
-    line_token = os.environ.get("9ead11e57360d8784ca5b40b6f868c08")
-    user_id = os.environ.get("2009987468")
+    # 【修正ポイント】カッコの中は「GitHubで設定した名前（変数名）」を書きます
+    line_token = os.environ.get("LINE_ACCESS_TOKEN")
+    user_id = os.environ.get("LINE_USER_ID")
     
     if not line_token or not user_id:
+        # これが出ると、GitHubのSecrets設定がうまくいっていません
         print("Error: LINE_ACCESS_TOKEN or LINE_USER_ID is not set.")
         return
 
@@ -20,9 +21,11 @@ def send_line(message):
         "messages": [{"type": "text", "text": message}]
     }
     
-    # メッセージが長すぎるとLINE側でエラーになるため、1000文字で切るなどの対策
     if len(message) > 1000:
         data["messages"][0]["text"] = message[:990] + "..."
 
     response = requests.post(url, headers=headers, json=data)
+    
+    # 200以外（401など）が出たら、トークンの値が間違っています
+    print(f"LINE Response Status: {response.status_code}")
     return response.status_code
