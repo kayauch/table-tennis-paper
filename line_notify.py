@@ -2,14 +2,14 @@ import requests
 import os
 
 def send_line(message):
-    # 【修正ポイント】カッコの中は「GitHubで設定した名前（変数名）」を書きます
+    # GitHubのSecretsから値を取得
     line_token = os.environ.get("LINE_ACCESS_TOKEN")
     user_id = os.environ.get("LINE_USER_ID")
     
+    # そもそも変数が読み込めているかチェック
     if not line_token or not user_id:
-        # これが出ると、GitHubのSecrets設定がうまくいっていません
-        print("Error: LINE_ACCESS_TOKEN or LINE_USER_ID is not set.")
-        return
+        print("DEBUG: Error - LINE_ACCESS_TOKEN or LINE_USER_ID is not set in Secrets.")
+        return 400
 
     url = "https://api.line.me/v2/bot/message/push"
     headers = {
@@ -21,11 +21,14 @@ def send_line(message):
         "messages": [{"type": "text", "text": message}]
     }
     
+    # LINEの1000文字制限対策
     if len(message) > 1000:
         data["messages"][0]["text"] = message[:990] + "..."
 
+    # 送信実行
     response = requests.post(url, headers=headers, json=data)
-    
-    # 200以外（401など）が出たら、トークンの値が間違っています
-    print(f"LINE Response Status: {response.status_code}")
+
+    # 【重要】実行ログに送信結果を詳しく出すコード
+    print(f"DEBUG: LINE Response Status = {response.status_code}, Response Body = {response.text}")
+
     return response.status_code
