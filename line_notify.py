@@ -2,18 +2,27 @@ import requests
 import os
 
 def send_line(message):
-  from line_notify import send_line  # 自作したファイルを読み込む
-
-def main():
-    # 1. 論文を集める処理
-    papers = collect_papers() 
+    # 環境変数からトークンとIDを取得（後述の.envで設定します）
+    line_token = os.environ.get("LINE_ACCESS_TOKEN")
+    user_id = os.environ.get("LINE_USER_ID")
     
-    # 2. メッセージを組み立てる
-    msg = f"今日の論文はこれです：\n{papers}"
-    
-    # 3. LINEに送る
-    send_line(msg)
+    if not line_token or not user_id:
+        print("Error: LINE_ACCESS_TOKEN or LINE_USER_ID is not set.")
+        return
 
-if __name__ == "__main__":
-    main()
-    pass
+    url = "https://api.line.me/v2/bot/message/push"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {line_token}"
+    }
+    data = {
+        "to": user_id,
+        "messages": [{"type": "text", "text": message}]
+    }
+    
+    # メッセージが長すぎるとLINE側でエラーになるため、1000文字で切るなどの対策
+    if len(message) > 1000:
+        data["messages"][0]["text"] = message[:990] + "..."
+
+    response = requests.post(url, headers=headers, json=data)
+    return response.status_code
