@@ -2,7 +2,7 @@ import arxiv
 import datetime
 import time  # 1. 時間制御用のライブラリを追加
 from deep_translator import GoogleTranslator
-from line_notifier import send_line 
+from line_notify import send_line 
 
 translator = GoogleTranslator(source='en', target='ja')
 
