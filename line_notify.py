@@ -3,8 +3,8 @@ import os
 
 def send_line(message):
     # 環境変数からトークンとIDを取得（後述の.envで設定します）
-    line_token = os.environ.get("LINE_ACCESS_TOKEN")
-    user_id = os.environ.get("LINE_USER_ID")
+    line_token = os.environ.get("9ead11e57360d8784ca5b40b6f868c08")
+    user_id = os.environ.get("2009987468")
     
     if not line_token or not user_id:
         print("Error: LINE_ACCESS_TOKEN or LINE_USER_ID is not set.")
