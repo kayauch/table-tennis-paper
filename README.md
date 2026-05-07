@@ -1,6 +1,6 @@
 # Table Tennis Paper Aggregator
 
-最終更新日: 2026-05-06
+最終更新日: 2026-05-07
 
 ## 📷 画像処理・AI活用 厳選論文
 
