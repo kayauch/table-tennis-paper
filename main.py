@@ -48,7 +48,7 @@ line_message = f"🏓 卓球論文アップデート ({datetime.date.today()})\n
 if cv_list.strip():
     # 最初の論文タイトルだけを抽出して通知
     first_paper = cv_list.split('\n')[0].replace("- **", "").replace("**", "")
-    line_message += f"【注目】{first_paper}\n\n詳細はGitHubのREADMEを確認してください。"
+    line_message += f"【注目】{first_paper}\n\n詳細はGitHubのREADME(https://github.com/kayauch/table-tennis-paper/blob/main/README.md)を確認してください。"
 else:
     line_message += "本日、画像処理系の新着論文はありませんでした。"
 
